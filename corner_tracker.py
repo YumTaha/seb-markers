@@ -1,9 +1,11 @@
 from __future__ import annotations
 
+import collections
 import json
 import math
 import os
 import sys
+import time
 from dataclasses import dataclass
 from enum import Enum, auto
 from pathlib import Path
@@ -34,6 +36,7 @@ CORNER_SMOOTH_ALPHA = 0.4   # EMA weight for new detection (lower = smoother)
 MIN_AREA = 10000
 MIN_MARKER_DIST = 50
 BSP_SPLIT_MARGIN = 0.04   # min distance from cell edge to allow a split
+DETECT_EVERY_N = 3        # in TRACKING mode, only run ArUco detection every Nth frame
 CALIB_FILE = Path(__file__).parent / "calibration.json"
 
 # BGR colors
@@ -586,8 +589,9 @@ def draw_hud(
     n_visible: int,
     frame_num: int,
     n_cells: int = 0,
+    fps: float = 0.0,
 ) -> None:
-    lines = [f"Mode: {mode.name}", f"Visible: {n_visible}/4", f"Frame: {frame_num}"]
+    lines = [f"Mode: {mode.name}", f"Visible: {n_visible}/4", f"Frame: {frame_num}", f"FPS: {fps:.1f}"]
     if mode == Mode.BSP_BUILD:
         lines += [
             f"Cells: {n_cells}",
@@ -729,6 +733,9 @@ def main() -> None:
     cv2.namedWindow("ArUco Tracker", cv2.WINDOW_NORMAL)
     cv2.setMouseCallback("ArUco Tracker", make_mouse_callback(mouse_state))
 
+    _frame_times: collections.deque = collections.deque(maxlen=30)
+    _detect_tick = 0
+
     while True:
         ret, frame = cap.read()
         if not ret:
@@ -737,8 +744,10 @@ def main() -> None:
 
         frame_num += 1
 
-        raw_detected = detect_markers(frame, detector)
-        current_detected = smooth_corners(raw_detected, current_detected)
+        _detect_tick += 1
+        if mode != Mode.TRACKING or _detect_tick % DETECT_EVERY_N == 0:
+            raw_detected = detect_markers(frame, detector)
+            current_detected = smooth_corners(raw_detected, current_detected)
         n_visible = len(current_detected)
 
         # Infer all 4 corners early (needed for saturation mask)
@@ -759,7 +768,7 @@ def main() -> None:
                 if n_visible == 4 and all(r in current_detected for r in ALL_ROLES):
                     quad_ready = quad_is_valid(current_detected)
                 draw_calib_status(display, current_detected, quad_ready)
-                draw_hud(display, mode, n_visible, frame_num)
+                draw_hud(display, mode, n_visible, frame_num, fps=_fps)
                 _consume_panel_click(mouse_state, layers, display.shape[1], display.shape[0])
 
             elif mode == Mode.BSP_BUILD:
@@ -791,7 +800,7 @@ def main() -> None:
                     )
 
                 n_cells = len(bsp_get_leaves(bsp_root)) if bsp_root else 1
-                draw_hud(display, mode, n_visible, frame_num, n_cells)
+                draw_hud(display, mode, n_visible, frame_num, n_cells, fps=_fps)
 
                 # Handle left-click split
                 if mouse_state["clicked"] and not _consume_panel_click(
@@ -835,7 +844,7 @@ def main() -> None:
                                          source_frame=frame,
                                          target_ranges=TARGET_COLORS[TARGET_NAMES[target_idx]])
 
-                draw_hud(display, mode, n_visible, frame_num)
+                draw_hud(display, mode, n_visible, frame_num, fps=_fps)
                 draw_text_outlined(
                     display, f"Target: {TARGET_NAMES[target_idx]}  (c=cycle)",
                     (10, display.shape[0] - 20), scale=0.6,
@@ -846,6 +855,12 @@ def main() -> None:
 
         except Exception as exc:
             print(f"[error] frame {frame_num}: {exc}")
+
+        _frame_times.append(time.time())
+        if len(_frame_times) >= 2:
+            _fps = len(_frame_times) / (_frame_times[-1] - _frame_times[0])
+        else:
+            _fps = 0.0
 
         cv2.imshow("ArUco Tracker", display)
         key = cv2.waitKey(1) & 0xFF
