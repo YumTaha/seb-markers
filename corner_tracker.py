@@ -2,11 +2,14 @@ from __future__ import annotations
 
 import json
 import math
+import os
 import sys
 from dataclasses import dataclass
 from enum import Enum, auto
 from pathlib import Path
 from typing import Optional
+
+os.environ.setdefault("QT_QPA_PLATFORM", "xcb")
 
 import cv2
 import numpy as np
@@ -27,6 +30,7 @@ REAL_WORLD: dict[str, np.ndarray] = {
 CAM_INDEX = 0
 CAM_WIDTH = 1920
 CAM_HEIGHT = 1080
+CORNER_SMOOTH_ALPHA = 0.4   # EMA weight for new detection (lower = smoother)
 MIN_AREA = 10000
 MIN_MARKER_DIST = 50
 BSP_SPLIT_MARGIN = 0.04   # min distance from cell edge to allow a split
@@ -334,10 +338,28 @@ def norm_to_px(pts_norm: list[tuple[float, float]], H_inv: np.ndarray) -> np.nda
 
 # ── Image utils ───────────────────────────────────────────────────────────────
 
-def change_saturation(image: np.ndarray, scale: float = 1.5) -> np.ndarray:
+def make_quad_mask(
+    corners: dict[str, tuple[float, float]],
+    shape: tuple,
+) -> np.ndarray:
+    pts = np.array([_ipt(corners[r]) for r in ALL_ROLES], dtype=np.int32)
+    mask = np.zeros(shape[:2], dtype=np.uint8)
+    cv2.fillPoly(mask, [pts], 255)
+    return mask
+
+
+def change_saturation(
+    image: np.ndarray,
+    scale: float = 1.5,
+    mask: Optional[np.ndarray] = None,
+) -> np.ndarray:
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV).astype(np.float32)
     hsv[:, :, 1] = np.clip(hsv[:, :, 1] * scale, 0, 255)
-    return cv2.cvtColor(hsv.astype(np.uint8), cv2.COLOR_HSV2BGR)
+    saturated = cv2.cvtColor(hsv.astype(np.uint8), cv2.COLOR_HSV2BGR)
+    if mask is None:
+        return saturated
+    return np.where(mask[:, :, np.newaxis] > 0, saturated, image)
+
 
 
 # ── Drawing helpers ────────────────────────────────────────────────────────────
@@ -616,6 +638,25 @@ def build_result_dict(result: dict[str, CornerResult]) -> dict:
     }
 
 
+# ── Corner smoother ───────────────────────────────────────────────────────────
+
+def smooth_corners(
+    detected: dict[str, tuple[float, float]],
+    prev: dict[str, tuple[float, float]],
+    alpha: float = CORNER_SMOOTH_ALPHA,
+) -> dict[str, tuple[float, float]]:
+    """EMA blend of new detections onto previous positions."""
+    out: dict[str, tuple[float, float]] = {}
+    for role, pt in detected.items():
+        if role in prev:
+            px, py = prev[role]
+            out[role] = (alpha * pt[0] + (1 - alpha) * px,
+                         alpha * pt[1] + (1 - alpha) * py)
+        else:
+            out[role] = pt
+    return out
+
+
 # ── Mouse callback ─────────────────────────────────────────────────────────────
 
 def make_mouse_callback(state: dict):
@@ -648,7 +689,8 @@ def _consume_panel_click(
 # ── Main ───────────────────────────────────────────────────────────────────────
 
 def main() -> None:
-    cap = cv2.VideoCapture(CAM_INDEX, cv2.CAP_DSHOW)
+    cap = cv2.VideoCapture(CAM_INDEX, cv2.CAP_V4L2)
+    cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, CAM_WIDTH)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, CAM_HEIGHT)
     if not cap.isOpened():
@@ -694,14 +736,24 @@ def main() -> None:
             continue
 
         frame_num += 1
+
+        raw_detected = detect_markers(frame, detector)
+        current_detected = smooth_corners(raw_detected, current_detected)
+        n_visible = len(current_detected)
+
+        # Infer all 4 corners early (needed for saturation mask)
+        if calib is not None:
+            result = infer_missing_corners(current_detected, calib)
+
         display = frame.copy() if layers["raw"] else np.zeros_like(frame)
+
         if layers["saturation"]:
-            display = change_saturation(display, scale=2.5)
+            inferred_px = {r: result[r].pixel for r in ALL_ROLES} if calib else {}
+            if all(inferred_px.get(r) is not None for r in ALL_ROLES):
+                quad_mask = make_quad_mask(inferred_px, display.shape)
+                display = change_saturation(display, scale=2.5, mask=quad_mask)
 
         try:
-            current_detected = detect_markers(frame, detector)
-            n_visible = len(current_detected)
-
             if mode == Mode.CALIBRATION:
                 quad_ready = False
                 if n_visible == 4 and all(r in current_detected for r in ALL_ROLES):
@@ -762,8 +814,6 @@ def main() -> None:
                 if calib is None:
                     mode = Mode.CALIBRATION
                     continue
-
-                result = infer_missing_corners(current_detected, calib)
 
                 all_px = {r: result[r].pixel for r in ALL_ROLES if result[r].pixel is not None}
                 if len(all_px) == 4:
