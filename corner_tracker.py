@@ -4,7 +4,10 @@ import collections
 import json
 import math
 import os
+import re
+import subprocess
 import sys
+import threading
 import time
 from dataclasses import dataclass
 from enum import Enum, auto
@@ -30,8 +33,9 @@ REAL_WORLD: dict[str, np.ndarray] = {
 }
 
 CAM_INDEX = 0
-CAM_WIDTH = 1920
+CAM_WIDTH  = 1920
 CAM_HEIGHT = 1080
+SNAPSHOT_FRAMES = 20   # frames averaged per saved photo
 CORNER_SMOOTH_ALPHA = 0.4   # EMA weight for new detection (lower = smoother)
 MIN_AREA = 10000
 MIN_MARKER_DIST = 50
@@ -355,8 +359,10 @@ def change_saturation(
     image: np.ndarray,
     scale: float = 1.5,
     mask: Optional[np.ndarray] = None,
+    frame_hsv: Optional[np.ndarray] = None,
 ) -> np.ndarray:
-    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV).astype(np.float32)
+    hsv = (frame_hsv if frame_hsv is not None
+           else cv2.cvtColor(image, cv2.COLOR_BGR2HSV)).astype(np.float32)
     hsv[:, :, 1] = np.clip(hsv[:, :, 1] * scale, 0, 255)
     saturated = cv2.cvtColor(hsv.astype(np.uint8), cv2.COLOR_HSV2BGR)
     if mask is None:
@@ -467,11 +473,12 @@ def draw_bsp_overlay(
     hover_ny: float = 0.0,
     source_frame: Optional[np.ndarray] = None,
     target_ranges: Optional[list[tuple[tuple, tuple]]] = None,
+    source_hsv: Optional[np.ndarray] = None,
 ) -> None:
-    source_hsv: Optional[np.ndarray] = None
     color_mask: Optional[np.ndarray] = None
-    if source_frame is not None and target_ranges:
-        source_hsv = cv2.cvtColor(source_frame, cv2.COLOR_BGR2HSV)
+    if target_ranges and (source_frame is not None or source_hsv is not None):
+        if source_hsv is None:
+            source_hsv = cv2.cvtColor(source_frame, cv2.COLOR_BGR2HSV)
         color_mask = np.zeros(source_hsv.shape[:2], dtype=np.uint8)
         for lo, hi in target_ranges:
             color_mask = cv2.bitwise_or(color_mask, cv2.inRange(source_hsv, lo, hi))
@@ -673,6 +680,17 @@ def make_mouse_callback(state: dict):
     return on_mouse
 
 
+def get_screen_size() -> tuple[int, int]:
+    try:
+        out = subprocess.run(["xrandr"], capture_output=True, text=True).stdout
+        m = re.search(r"current (\d+) x (\d+)", out)
+        if m:
+            return int(m.group(1)), int(m.group(2))
+    except Exception:
+        pass
+    return 1920, 1080
+
+
 # ── Panel click helper ─────────────────────────────────────────────────────────
 
 def _consume_panel_click(
@@ -690,7 +708,48 @@ def _consume_panel_click(
     return False
 
 
-# ── Main ───────────────────────────────────────────────────────────────────────
+# ── Background frame grabber ──────────────────────────────────────────────────
+
+class FrameGrabber:
+    """Decodes MJPEG frames in a background thread so the main loop never blocks on cap.read()."""
+
+    def __init__(self, cap: cv2.VideoCapture) -> None:
+        self._cap     = cap
+        self._frame:  Optional[np.ndarray] = None
+        self._lock    = threading.Lock()
+        self._running = True
+        self._thread  = threading.Thread(target=self._loop, daemon=True)
+        self._thread.start()
+
+    def _loop(self) -> None:
+        while self._running:
+            ret, frame = self._cap.read()
+            if ret:
+                with self._lock:
+                    self._frame = frame
+
+    def read(self) -> tuple[bool, Optional[np.ndarray]]:
+        with self._lock:
+            if self._frame is None:
+                return False, None
+            frame, self._frame = self._frame, None
+            return True, frame
+
+    def stop(self) -> None:
+        self._running = False
+
+
+
+def get_screen_size() -> tuple[int, int]:
+    try:
+        out = subprocess.run(["xrandr"], capture_output=True, text=True).stdout
+        m = re.search(r"current (\d+) x (\d+)", out)
+        if m:
+            return int(m.group(1)), int(m.group(2))
+    except Exception:
+        pass
+    return 1920, 1080
+
 
 def main() -> None:
     cap = cv2.VideoCapture(CAM_INDEX, cv2.CAP_V4L2)
@@ -700,6 +759,8 @@ def main() -> None:
     if not cap.isOpened():
         print(f"[error] cannot open webcam at index {CAM_INDEX}")
         sys.exit(1)
+
+    grabber = FrameGrabber(cap)
 
     aruco_dict   = cv2.aruco.getPredefinedDictionary(ARUCO_DICT_ID)
     aruco_params = cv2.aruco.DetectorParameters()
@@ -730,19 +791,43 @@ def main() -> None:
     layers: dict[str, bool] = {k: True for k in LAYER_KEYS}
     target_idx = 0   # index into TARGET_NAMES
 
+    scr_w, scr_h = get_screen_size()
     cv2.namedWindow("ArUco Tracker", cv2.WINDOW_NORMAL)
+    cv2.resizeWindow("ArUco Tracker", scr_w, scr_h)
+    cv2.moveWindow("ArUco Tracker", 0, 0)
     cv2.setMouseCallback("ArUco Tracker", make_mouse_callback(mouse_state))
 
     _frame_times: collections.deque = collections.deque(maxlen=30)
+    _fps = 0.0
     _detect_tick = 0
+    _snap_acc:   Optional[np.ndarray] = None
+    _snap_count: int = 0
 
     while True:
-        ret, frame = cap.read()
+        ret, frame = grabber.read()
         if not ret:
-            print("[warn] failed to read frame, retrying...")
+            if cv2.waitKey(1) & 0xFF in (ord("q"), 27):
+                break
             continue
 
         frame_num += 1
+
+        # Snapshot averaging — accumulate raw frames, save when complete
+        if _snap_count > 0:
+            _snap_acc = (frame.astype(np.float32) if _snap_acc is None
+                         else _snap_acc + frame.astype(np.float32))
+            _snap_count -= 1
+            if _snap_count == 0:
+                averaged = (_snap_acc / SNAPSHOT_FRAMES).clip(0, 255).astype(np.uint8)
+                filename = f"frame_{frame_num:04d}.png"
+                cv2.imwrite(filename, averaged)
+                print(f"[save] {filename}  ({SNAPSHOT_FRAMES}-frame average, "
+                      f"{averaged.shape[1]}x{averaged.shape[0]})")
+                print(f"[frame {frame_num}] {build_result_dict(result)}")
+                _snap_acc = None
+
+        # Single HSV conversion shared by saturation and color analysis
+        frame_hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
         _detect_tick += 1
         if mode != Mode.TRACKING or _detect_tick % DETECT_EVERY_N == 0:
@@ -760,7 +845,8 @@ def main() -> None:
             inferred_px = {r: result[r].pixel for r in ALL_ROLES} if calib else {}
             if all(inferred_px.get(r) is not None for r in ALL_ROLES):
                 quad_mask = make_quad_mask(inferred_px, display.shape)
-                display = change_saturation(display, scale=2.5, mask=quad_mask)
+                display = change_saturation(display, scale=2.5, mask=quad_mask,
+                                            frame_hsv=frame_hsv)
 
         try:
             if mode == Mode.CALIBRATION:
@@ -841,7 +927,7 @@ def main() -> None:
                     draw_quad_overlay(display, result, last_known)
                     if bsp_root is not None and cur_H_inv is not None:
                         draw_bsp_overlay(display, bsp_root, cur_H_inv, show_ids=True,
-                                         source_frame=frame,
+                                         source_hsv=frame_hsv,
                                          target_ranges=TARGET_COLORS[TARGET_NAMES[target_idx]])
 
                 draw_hud(display, mode, n_visible, frame_num, fps=_fps)
@@ -913,11 +999,12 @@ def main() -> None:
             print(f"[target] → {TARGET_NAMES[target_idx]}")
 
         elif key == ord("s"):
-            filename = f"frame_{frame_num:04d}.png"
-            cv2.imwrite(filename, display)
-            print(f"[save] {filename}")
-            print(f"[frame {frame_num}] {build_result_dict(result)}")
+            if _snap_count == 0:
+                _snap_acc   = None
+                _snap_count = SNAPSHOT_FRAMES
+                print(f"[capture] averaging {SNAPSHOT_FRAMES} frames...")
 
+    grabber.stop()
     cap.release()
     cv2.destroyAllWindows()
 
