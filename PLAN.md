@@ -121,8 +121,13 @@ not by ID.
   VALIDATED end-to-end: tools-off = all MISSING (48-59%), tools-on = all PRESENT (11-17%),
   35% threshold with margin both sides. Red handles are a non-issue (we measure pink, not
   tool color — a red-handled tool over pink still reads present).
+- ✅ **Auto_Run** (`~/Auto_Run/`, separate uv project): sews the whole pipeline into one app.
+  Wizard (calibrate edges → draw+name slots → schedule) + headless `auto_run.run` fired by
+  cron at set times: locate (retry 1min×10 if no table → save "NO TABLE"), else detect
+  present/missing → dated audit PNG (green/red) + JSON + `records/log.csv`. Headless run
+  validated (all-present audit + log row). User runs the GUI wizard from RDP to arm it.
 - ⏳ Next: finalize board (permanent yellow markers + pink under every cutout), recalibrate,
-  redraw slots; then this pipeline is the end-of-shift audit run.
+  redraw+name all slots; collect a week of data via Auto_Run for the presentation.
 
 ## 4. Testing plan (phased)
 
