@@ -1,0 +1,47 @@
+{
+  "timestamp": "2026-06-30 21:18:58",
+  "reproj_px": 0.61,
+  "threshold": 35.0,
+  "bracket": [
+    20,
+    45,
+    90,
+    180
+  ],
+  "slots": [
+    {
+      "id": 0,
+      "max_pink_pct": 59.2,
+      "per_exposure": [
+        57.8,
+        59.2,
+        56.8,
+        10.9
+      ],
+      "missing": true
+    },
+    {
+      "id": 1,
+      "max_pink_pct": 48.5,
+      "per_exposure": [
+        47.4,
+        48.5,
+        32.8,
+        2.2
+      ],
+      "missing": true
+    },
+    {
+      "id": 2,
+      "max_pink_pct": 56.2,
+      "per_exposure": [
+        52.3,
+        55.3,
+        56.2,
+        3.9
+      ],
+      "missing": true
+    }
+  ],
+  "n_missing": 3
+}

@@ -9,3 +9,4 @@ frame_*.png
 calib_shots/
 testing/*/01_raw_*.png
 testing/*/02_det_*.png
+testing/paperbake_*/

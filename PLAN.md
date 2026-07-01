@@ -105,8 +105,24 @@ not by ID.
   locate-the-table (`locate_table.py`): undistort→detect→homography→derive→validate.
   Tested live: PASS, reprojection 0.86 px, corners align, spurious marker ignored.
   Markers currently TEMPORARY → re-run `calibrate_board.py` once permanent ones placed.
-- ⏳ Phase 3: warp to canonical top-down → define tool slots → detect present/missing
-  → save audit image + record.
+- ✅ Warp to canonical top-down (`warp_table.py`).
+- ⏳ Phase 3: backing-paper color. Bake-off (`paper_bakeoff.py`, testing/paperbake_*):
+  pink/green/yellow all segment cleanly at low exposure (counts 9/7/7 = ground truth,
+  no false positives — pink NOT confused with red tools). Pink most saturated + most
+  robust as brightness rises (green/yellow wash out first). **Leaning PINK** (no tool is
+  pink → works for all tools, no per-slot exclusions).
+- ✅ Pink under-tool drop test (`pink_test.py`): 3 tools, pink 58-75% exposed → 7-17%
+  covered — wide gap, held even in darker light. **PINK LOCKED.** Threshold ~35%.
+- ✅ Define tool slots (`slots_define.py` → `slots.json`, normalized table coords).
+- ✅ Detect present/missing (`detect_tools.py`): per slot, MAX pink% across an EXPOSURE
+  BRACKET [20,45,90,180] (max is the right combiner — pink can only be under-detected, so
+  averaging/median would bias to false "present"; e.g. slot read [47,48,33,2], avg 33 would
+  fail but max 48 is correct). pink>=35% => MISSING. Saves audit PNG + JSON.
+  VALIDATED end-to-end: tools-off = all MISSING (48-59%), tools-on = all PRESENT (11-17%),
+  35% threshold with margin both sides. Red handles are a non-issue (we measure pink, not
+  tool color — a red-handled tool over pink still reads present).
+- ⏳ Next: finalize board (permanent yellow markers + pink under every cutout), recalibrate,
+  redraw slots; then this pipeline is the end-of-shift audit run.
 
 ## 4. Testing plan (phased)
 

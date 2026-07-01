@@ -1,0 +1,23 @@
+{
+  "timestamp": "2026-06-30 21:13:55",
+  "reproj_px": 0.69,
+  "threshold": 35.0,
+  "slots": [
+    {
+      "id": 0,
+      "pink_pct": 31.2,
+      "missing": false
+    },
+    {
+      "id": 1,
+      "pink_pct": 21.1,
+      "missing": false
+    },
+    {
+      "id": 2,
+      "pink_pct": 53.1,
+      "missing": true
+    }
+  ],
+  "n_missing": 1
+}
