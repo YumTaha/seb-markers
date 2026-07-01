@@ -1,0 +1,1288 @@
+{
+  "exposures": [
+    8,
+    15,
+    25,
+    40,
+    60,
+    90,
+    130,
+    180,
+    250,
+    350,
+    500
+  ],
+  "gain": 0,
+  "records": [
+    {
+      "exposure": 8,
+      "gray": {
+        "ids": [
+          3
+        ],
+        "red": 1,
+        "white": 0,
+        "yellow": 0
+      },
+      "R": {
+        "ids": [
+          3
+        ],
+        "red": 1,
+        "white": 0,
+        "yellow": 0
+      },
+      "G": {
+        "ids": [
+          3
+        ],
+        "red": 1,
+        "white": 0,
+        "yellow": 0
+      },
+      "B": {
+        "ids": [],
+        "red": 0,
+        "white": 0,
+        "yellow": 0
+      },
+      "maxRG": {
+        "ids": [
+          0,
+          3
+        ],
+        "red": 2,
+        "white": 0,
+        "yellow": 0
+      },
+      "V": {
+        "ids": [
+          0,
+          3
+        ],
+        "red": 2,
+        "white": 0,
+        "yellow": 0
+      }
+    },
+    {
+      "exposure": 15,
+      "gray": {
+        "ids": [
+          0,
+          2,
+          3
+        ],
+        "red": 3,
+        "white": 0,
+        "yellow": 0
+      },
+      "R": {
+        "ids": [
+          0,
+          2,
+          3
+        ],
+        "red": 3,
+        "white": 0,
+        "yellow": 0
+      },
+      "G": {
+        "ids": [
+          0,
+          2,
+          3
+        ],
+        "red": 3,
+        "white": 0,
+        "yellow": 0
+      },
+      "B": {
+        "ids": [
+          2
+        ],
+        "red": 1,
+        "white": 0,
+        "yellow": 0
+      },
+      "maxRG": {
+        "ids": [
+          0,
+          2,
+          3
+        ],
+        "red": 3,
+        "white": 0,
+        "yellow": 0
+      },
+      "V": {
+        "ids": [
+          0,
+          2,
+          3
+        ],
+        "red": 3,
+        "white": 0,
+        "yellow": 0
+      }
+    },
+    {
+      "exposure": 25,
+      "gray": {
+        "ids": [
+          0,
+          0,
+          2,
+          2,
+          3,
+          3
+        ],
+        "red": 6,
+        "white": 0,
+        "yellow": 0
+      },
+      "R": {
+        "ids": [
+          0,
+          0,
+          1,
+          2,
+          2,
+          3,
+          3
+        ],
+        "red": 7,
+        "white": 0,
+        "yellow": 0
+      },
+      "G": {
+        "ids": [
+          0,
+          0,
+          2,
+          2,
+          3,
+          3
+        ],
+        "red": 6,
+        "white": 0,
+        "yellow": 0
+      },
+      "B": {
+        "ids": [
+          0,
+          0,
+          2,
+          3
+        ],
+        "red": 4,
+        "white": 0,
+        "yellow": 0
+      },
+      "maxRG": {
+        "ids": [
+          0,
+          1,
+          2,
+          2,
+          3,
+          3,
+          3
+        ],
+        "red": 7,
+        "white": 0,
+        "yellow": 0
+      },
+      "V": {
+        "ids": [
+          0,
+          0,
+          2,
+          3,
+          3
+        ],
+        "red": 5,
+        "white": 0,
+        "yellow": 0
+      }
+    },
+    {
+      "exposure": 40,
+      "gray": {
+        "ids": [
+          0,
+          0,
+          2,
+          2,
+          3,
+          3
+        ],
+        "red": 6,
+        "white": 0,
+        "yellow": 0
+      },
+      "R": {
+        "ids": [
+          0,
+          0,
+          0,
+          1,
+          2,
+          2,
+          2,
+          3,
+          3,
+          3
+        ],
+        "red": 10,
+        "white": 0,
+        "yellow": 0
+      },
+      "G": {
+        "ids": [
+          0,
+          0,
+          2,
+          2,
+          3,
+          3
+        ],
+        "red": 6,
+        "white": 0,
+        "yellow": 0
+      },
+      "B": {
+        "ids": [
+          0,
+          0,
+          2,
+          3,
+          3
+        ],
+        "red": 5,
+        "white": 0,
+        "yellow": 0
+      },
+      "maxRG": {
+        "ids": [
+          0,
+          0,
+          0,
+          1,
+          2,
+          2,
+          2,
+          3,
+          3,
+          3
+        ],
+        "red": 10,
+        "white": 0,
+        "yellow": 0
+      },
+      "V": {
+        "ids": [
+          0,
+          0,
+          0,
+          1,
+          2,
+          2,
+          2,
+          3,
+          3,
+          3
+        ],
+        "red": 10,
+        "white": 0,
+        "yellow": 0
+      }
+    },
+    {
+      "exposure": 60,
+      "gray": {
+        "ids": [
+          0,
+          0,
+          0,
+          1,
+          2,
+          2,
+          3,
+          3,
+          3
+        ],
+        "red": 9,
+        "white": 0,
+        "yellow": 0
+      },
+      "R": {
+        "ids": [
+          0,
+          0,
+          0,
+          1,
+          2,
+          2,
+          2,
+          3,
+          3,
+          3
+        ],
+        "red": 10,
+        "white": 0,
+        "yellow": 0
+      },
+      "G": {
+        "ids": [
+          0,
+          0,
+          0,
+          2,
+          2,
+          3,
+          3,
+          3
+        ],
+        "red": 8,
+        "white": 0,
+        "yellow": 0
+      },
+      "B": {
+        "ids": [
+          0,
+          0,
+          2,
+          2,
+          3,
+          3,
+          3
+        ],
+        "red": 7,
+        "white": 0,
+        "yellow": 0
+      },
+      "maxRG": {
+        "ids": [
+          0,
+          0,
+          0,
+          1,
+          2,
+          2,
+          2,
+          3,
+          3,
+          3
+        ],
+        "red": 10,
+        "white": 0,
+        "yellow": 0
+      },
+      "V": {
+        "ids": [
+          0,
+          0,
+          0,
+          1,
+          2,
+          2,
+          2,
+          3,
+          3,
+          3
+        ],
+        "red": 10,
+        "white": 0,
+        "yellow": 0
+      }
+    },
+    {
+      "exposure": 90,
+      "gray": {
+        "ids": [
+          0,
+          0,
+          0,
+          1,
+          2,
+          2,
+          2,
+          3,
+          3,
+          3
+        ],
+        "red": 10,
+        "white": 0,
+        "yellow": 0
+      },
+      "R": {
+        "ids": [
+          0,
+          0,
+          0,
+          1,
+          2,
+          2,
+          2,
+          3,
+          3,
+          3
+        ],
+        "red": 10,
+        "white": 0,
+        "yellow": 0
+      },
+      "G": {
+        "ids": [
+          0,
+          0,
+          0,
+          2,
+          2,
+          2,
+          3,
+          3,
+          3
+        ],
+        "red": 9,
+        "white": 0,
+        "yellow": 0
+      },
+      "B": {
+        "ids": [
+          0,
+          0,
+          0,
+          1,
+          2,
+          2,
+          3,
+          3,
+          3
+        ],
+        "red": 9,
+        "white": 0,
+        "yellow": 0
+      },
+      "maxRG": {
+        "ids": [
+          0,
+          0,
+          0,
+          1,
+          2,
+          2,
+          2,
+          3,
+          3,
+          3
+        ],
+        "red": 10,
+        "white": 0,
+        "yellow": 0
+      },
+      "V": {
+        "ids": [
+          0,
+          0,
+          0,
+          1,
+          2,
+          2,
+          2,
+          3,
+          3,
+          3
+        ],
+        "red": 10,
+        "white": 0,
+        "yellow": 0
+      }
+    },
+    {
+      "exposure": 130,
+      "gray": {
+        "ids": [
+          0,
+          0,
+          0,
+          1,
+          2,
+          2,
+          2,
+          3,
+          3,
+          3
+        ],
+        "red": 10,
+        "white": 0,
+        "yellow": 0
+      },
+      "R": {
+        "ids": [
+          0,
+          0,
+          0,
+          2,
+          2,
+          2,
+          3,
+          3,
+          3
+        ],
+        "red": 9,
+        "white": 0,
+        "yellow": 0
+      },
+      "G": {
+        "ids": [
+          0,
+          0,
+          0,
+          1,
+          2,
+          2,
+          2,
+          3,
+          3,
+          3
+        ],
+        "red": 10,
+        "white": 0,
+        "yellow": 0
+      },
+      "B": {
+        "ids": [
+          0,
+          0,
+          0,
+          2,
+          2,
+          2,
+          3,
+          3,
+          3
+        ],
+        "red": 9,
+        "white": 0,
+        "yellow": 0
+      },
+      "maxRG": {
+        "ids": [
+          0,
+          0,
+          0,
+          2,
+          2,
+          2,
+          3,
+          3,
+          3
+        ],
+        "red": 9,
+        "white": 0,
+        "yellow": 0
+      },
+      "V": {
+        "ids": [
+          0,
+          0,
+          0,
+          1,
+          2,
+          2,
+          2,
+          3,
+          3,
+          3
+        ],
+        "red": 10,
+        "white": 0,
+        "yellow": 0
+      }
+    },
+    {
+      "exposure": 180,
+      "gray": {
+        "ids": [
+          0,
+          0,
+          0,
+          2,
+          2,
+          2,
+          3,
+          3,
+          3
+        ],
+        "red": 9,
+        "white": 0,
+        "yellow": 0
+      },
+      "R": {
+        "ids": [
+          0,
+          0,
+          0,
+          1,
+          2,
+          2,
+          2,
+          3,
+          3,
+          3
+        ],
+        "red": 10,
+        "white": 0,
+        "yellow": 0
+      },
+      "G": {
+        "ids": [
+          0,
+          0,
+          0,
+          2,
+          2,
+          2,
+          3,
+          3,
+          3
+        ],
+        "red": 9,
+        "white": 0,
+        "yellow": 0
+      },
+      "B": {
+        "ids": [
+          0,
+          0,
+          0,
+          2,
+          2,
+          2,
+          3,
+          3,
+          3
+        ],
+        "red": 9,
+        "white": 0,
+        "yellow": 0
+      },
+      "maxRG": {
+        "ids": [
+          0,
+          0,
+          0,
+          1,
+          2,
+          2,
+          2,
+          3,
+          3,
+          3
+        ],
+        "red": 10,
+        "white": 0,
+        "yellow": 0
+      },
+      "V": {
+        "ids": [
+          0,
+          0,
+          0,
+          2,
+          2,
+          2,
+          3,
+          3,
+          3
+        ],
+        "red": 9,
+        "white": 0,
+        "yellow": 0
+      }
+    },
+    {
+      "exposure": 250,
+      "gray": {
+        "ids": [
+          0,
+          0,
+          0,
+          2,
+          2,
+          2,
+          3,
+          3,
+          3
+        ],
+        "red": 9,
+        "white": 0,
+        "yellow": 0
+      },
+      "R": {
+        "ids": [
+          0,
+          0,
+          0,
+          2,
+          2,
+          2,
+          3,
+          3,
+          3
+        ],
+        "red": 9,
+        "white": 0,
+        "yellow": 0
+      },
+      "G": {
+        "ids": [
+          0,
+          0,
+          0,
+          2,
+          2,
+          2,
+          3,
+          3,
+          3
+        ],
+        "red": 9,
+        "white": 0,
+        "yellow": 0
+      },
+      "B": {
+        "ids": [
+          0,
+          0,
+          2,
+          2,
+          2,
+          3,
+          3,
+          3
+        ],
+        "red": 8,
+        "white": 0,
+        "yellow": 0
+      },
+      "maxRG": {
+        "ids": [
+          0,
+          0,
+          2,
+          2,
+          2,
+          3,
+          3,
+          3
+        ],
+        "red": 8,
+        "white": 0,
+        "yellow": 0
+      },
+      "V": {
+        "ids": [
+          0,
+          2,
+          2,
+          2,
+          3,
+          3,
+          3
+        ],
+        "red": 7,
+        "white": 0,
+        "yellow": 0
+      }
+    },
+    {
+      "exposure": 350,
+      "gray": {
+        "ids": [
+          1,
+          2,
+          2,
+          2,
+          3,
+          3,
+          3
+        ],
+        "red": 7,
+        "white": 0,
+        "yellow": 0
+      },
+      "R": {
+        "ids": [
+          2,
+          2,
+          2,
+          3,
+          3,
+          3
+        ],
+        "red": 6,
+        "white": 0,
+        "yellow": 0
+      },
+      "G": {
+        "ids": [
+          0,
+          1,
+          2,
+          2,
+          2,
+          3,
+          3,
+          3
+        ],
+        "red": 8,
+        "white": 0,
+        "yellow": 0
+      },
+      "B": {
+        "ids": [
+          0,
+          2,
+          2,
+          2,
+          3,
+          3,
+          3
+        ],
+        "red": 7,
+        "white": 0,
+        "yellow": 0
+      },
+      "maxRG": {
+        "ids": [
+          2,
+          2,
+          2,
+          3,
+          3,
+          3
+        ],
+        "red": 6,
+        "white": 0,
+        "yellow": 0
+      },
+      "V": {
+        "ids": [
+          0,
+          2,
+          2,
+          2,
+          3,
+          3,
+          3
+        ],
+        "red": 7,
+        "white": 0,
+        "yellow": 0
+      }
+    },
+    {
+      "exposure": 500,
+      "gray": {
+        "ids": [
+          2,
+          2,
+          2,
+          3,
+          3,
+          3
+        ],
+        "red": 6,
+        "white": 0,
+        "yellow": 0
+      },
+      "R": {
+        "ids": [
+          2,
+          2,
+          2,
+          3,
+          3,
+          3
+        ],
+        "red": 6,
+        "white": 0,
+        "yellow": 0
+      },
+      "G": {
+        "ids": [
+          2,
+          2,
+          2,
+          3,
+          3,
+          3
+        ],
+        "red": 6,
+        "white": 0,
+        "yellow": 0
+      },
+      "B": {
+        "ids": [
+          0,
+          2,
+          2,
+          2,
+          3,
+          3
+        ],
+        "red": 6,
+        "white": 0,
+        "yellow": 0
+      },
+      "maxRG": {
+        "ids": [
+          2,
+          2,
+          2,
+          3,
+          3,
+          3
+        ],
+        "red": 6,
+        "white": 0,
+        "yellow": 0
+      },
+      "V": {
+        "ids": [
+          2,
+          2,
+          2,
+          3,
+          3
+        ],
+        "red": 5,
+        "white": 0,
+        "yellow": 0
+      }
+    }
+  ],
+  "summary": {
+    "gray": {
+      "red": {
+        "exposures_with_detection": 11,
+        "distinct_ids_seen": 4,
+        "per_exposure_counts": [
+          1,
+          3,
+          6,
+          6,
+          9,
+          10,
+          10,
+          9,
+          9,
+          7,
+          6
+        ]
+      },
+      "white": {
+        "exposures_with_detection": 0,
+        "distinct_ids_seen": 0,
+        "per_exposure_counts": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "yellow": {
+        "exposures_with_detection": 0,
+        "distinct_ids_seen": 0,
+        "per_exposure_counts": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    "R": {
+      "red": {
+        "exposures_with_detection": 11,
+        "distinct_ids_seen": 4,
+        "per_exposure_counts": [
+          1,
+          3,
+          7,
+          10,
+          10,
+          10,
+          9,
+          10,
+          9,
+          6,
+          6
+        ]
+      },
+      "white": {
+        "exposures_with_detection": 0,
+        "distinct_ids_seen": 0,
+        "per_exposure_counts": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "yellow": {
+        "exposures_with_detection": 0,
+        "distinct_ids_seen": 0,
+        "per_exposure_counts": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    "G": {
+      "red": {
+        "exposures_with_detection": 11,
+        "distinct_ids_seen": 4,
+        "per_exposure_counts": [
+          1,
+          3,
+          6,
+          6,
+          8,
+          9,
+          10,
+          9,
+          9,
+          8,
+          6
+        ]
+      },
+      "white": {
+        "exposures_with_detection": 0,
+        "distinct_ids_seen": 0,
+        "per_exposure_counts": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "yellow": {
+        "exposures_with_detection": 0,
+        "distinct_ids_seen": 0,
+        "per_exposure_counts": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    "B": {
+      "red": {
+        "exposures_with_detection": 10,
+        "distinct_ids_seen": 4,
+        "per_exposure_counts": [
+          0,
+          1,
+          4,
+          5,
+          7,
+          9,
+          9,
+          9,
+          8,
+          7,
+          6
+        ]
+      },
+      "white": {
+        "exposures_with_detection": 0,
+        "distinct_ids_seen": 0,
+        "per_exposure_counts": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "yellow": {
+        "exposures_with_detection": 0,
+        "distinct_ids_seen": 0,
+        "per_exposure_counts": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    "maxRG": {
+      "red": {
+        "exposures_with_detection": 11,
+        "distinct_ids_seen": 4,
+        "per_exposure_counts": [
+          2,
+          3,
+          7,
+          10,
+          10,
+          10,
+          9,
+          10,
+          8,
+          6,
+          6
+        ]
+      },
+      "white": {
+        "exposures_with_detection": 0,
+        "distinct_ids_seen": 0,
+        "per_exposure_counts": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "yellow": {
+        "exposures_with_detection": 0,
+        "distinct_ids_seen": 0,
+        "per_exposure_counts": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    "V": {
+      "red": {
+        "exposures_with_detection": 11,
+        "distinct_ids_seen": 4,
+        "per_exposure_counts": [
+          2,
+          3,
+          5,
+          10,
+          10,
+          10,
+          10,
+          9,
+          7,
+          7,
+          5
+        ]
+      },
+      "white": {
+        "exposures_with_detection": 0,
+        "distinct_ids_seen": 0,
+        "per_exposure_counts": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "yellow": {
+        "exposures_with_detection": 0,
+        "distinct_ids_seen": 0,
+        "per_exposure_counts": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    }
+  }
+}
